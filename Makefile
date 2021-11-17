@@ -14,5 +14,8 @@ clear:
 	rm *.o
 	rm coreschedtool
 
-install: coreschedtools
-	cp coreschedtool /usr/bin/coreschedtool
+install: coreschedtool
+	sudo cp coreschedtool /usr/bin/coreschedtool
+	
+uninstall: /usr/bin/coreschedtool
+	sudo rm /usr/bin/coreschedtool

@@ -1,19 +1,18 @@
 CC=gcc
 CFLAGS=-O3
-DEBUG=-g $(CFLAGS)
 
-./compiled/coreschedtools: ./compiled/main.o ./compiled/utils.o
-	$(CC) -o ./compiled/coreschedtool ./compiled/main.o ./compiled/utils.o
+coreschedtool: main.o utils.o
+	$(CC) -o coreschedtool main.o utils.o
 
-./compiled/main.o: main.c main.h
-	$(CC) $(CFLAGS) -o ./compiled/main.o -c main.c
+main.o: main.c main.h
+	$(CC) $(CFLAGS) -o main.o -c main.c
 
-./compiled/utils.o: utils.c main.h
-	$(CC) $(CFLAGS) -o ./compiled/utils.o -c utils.c
+utils.o: utils.c main.h
+	$(CC) $(CFLAGS) -o utils.o -c utils.c
 
 clear:
-	rm ./compiled/*
+	rm *.o
+	rm coreschedtool
 
-
-install: ./compiled/coreschedtools
-	cp ./compiled/coreschedtool /usr/bin/coreschedtool
+install: coreschedtools
+	cp coreschedtool /usr/bin/coreschedtool

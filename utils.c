@@ -76,6 +76,9 @@ cst_config * loadConfiguration(int argc, char* argv[]){
         }else if(strcmp(argv[parsedParams], "-clear") == 0){
             config->cmd = CLEAR_TASK;
 
+        }else if(strcmp(argv[parsedParams], "-peek") == 0){
+            config->cmd = PEEK_TASK;
+
         }else if(strcmp(argv[parsedParams], "-v") == 0){  //if is set, the output will be verbose.
 
             config->verbose = TRUE;
@@ -98,11 +101,12 @@ cst_config * loadConfiguration(int argc, char* argv[]){
 void printHelp(){
     printf("\ncoreschedtool, a tool to manage core scheduling cookies.\n");
     printf("developed by Marco Edoardo Santimaria as part of his thesis @ University of Torino (UniTo)\n");
-    printf("Usage: $coreschedtool [<list of taskId> | -add <list of taskid>  -to <taskid>| -c <list of task id>] [-v] \n");
+    printf("Usage: $coreschedtool [<list of taskId> | -add <list of taskid>  -to <taskid>| -c <list of task id> | -peek <list of taskid>] [-v] \n");
     printf("\n<list of task id> : \n\tif no parameters are given, a new core scheduling group will be created with all task id listed, separated by a space\n");
     printf("\n-r <fromTask> <toTask>: \n\tIf -r is given as parameter instead of <list of task id>, then a range of tasks will be used\n\n");
     printf("\n-add <list of task id> -to <taskid>: \n\t<list of task id> will be added to <taskid> core scheduling group\n");
     printf("\n-c <list of task id> : \n\tremove the <list of task id> from the core scheduling group wich is currently inserted into\n");
+    printf("\n-peek : \n\tprint all cookies from given tasks ids\n\n");
     printf("\n-v : \n\ta verbose output will be added\n\n");
     printf("\n\n");
 }

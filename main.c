@@ -44,6 +44,15 @@ int main(int argc, char* argv[]){
     case CLEAR_TASK:
         pushCookie();
         break;
+
+    case PEEK_TASK:
+        printf("Task\tCookie\n");
+        for(i=0;i<config->numberOfTask;i++){
+            prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, config->listOfTask[i] , config->TaskType, &cookie);
+            printf("[%d]\t[%lu]\n", config->listOfTask[i], cookie);
+        }
+        printf("\n");
+        break;
     
     default:
         printf("Error: unknown prctl command\n");

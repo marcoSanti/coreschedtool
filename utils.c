@@ -85,9 +85,10 @@ cst_config * loadConfiguration(int argc, char* argv[]){
             parsedParams++;
 
         }else{
-            printf("Unknown parameter: %s\n\n", argv[parsedParams]);
-            printHelp();
-            exit(EXIT_FAILURE);
+            //add the option to exec another program in core scheduling
+            config->cmd = EXEC_TASK;
+            config->exec_params = &argv+(parsedParams * sizeof(void *) );
+            return config; //stop the parsing of the code.
         }
 
         

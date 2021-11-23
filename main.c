@@ -53,6 +53,18 @@ int main(int argc, char* argv[]){
         }
         printf("\n");
         break;
+
+    case EXEC_TASK:
+        if(config->verbose) printf("Setting core scheduling and executing program: %s\n", config->exec_params[0]);
+
+        prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid() , config->TaskType, &cookie);
+        if(cookie == 0)
+            prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, getpid(), config->TaskType, NULL);
+
+        execve(config->exec_params[0], config->exec_params, getenv());
+        printf("Error: unable to start program!\n");
+        exit(EXIT_FAILURE);
+        break;
     
     default:
         printf("Error: unknown prctl command\n");

@@ -75,9 +75,11 @@ cst_config * loadConfiguration(int argc, char* argv[]){
 
         }else if(strcmp(argv[parsedParams], "-clear") == 0){
             config->cmd = CLEAR_TASK;
+            parsedParams++;
 
         }else if(strcmp(argv[parsedParams], "-peek") == 0){
             config->cmd = PEEK_TASK;
+            parsedParams++;
 
         }else if(strcmp(argv[parsedParams], "-v") == 0){  //if is set, the output will be verbose.
 
@@ -87,7 +89,7 @@ cst_config * loadConfiguration(int argc, char* argv[]){
         }else{
             //add the option to exec another program in core scheduling
             config->cmd = EXEC_TASK;
-            config->exec_params = &argv+(parsedParams * sizeof(void *) );
+            config->execPosition = parsedParams;
             return config; //stop the parsing of the code.
         }
 

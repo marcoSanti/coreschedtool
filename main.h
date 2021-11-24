@@ -25,7 +25,7 @@ typedef struct{
     int numberOfTask;
     int *listOfTask;
     int shareFromTask;
-    char* exec_params;
+    int execPosition;
 } cst_config;
 
 

@@ -10,6 +10,7 @@ int main(int argc, char* argv[]){
     extern int errno;
     int i = 0, command = 0;
     unsigned long cookie;
+    extern char **environ;
 
     checkRoot();
 
@@ -55,13 +56,13 @@ int main(int argc, char* argv[]){
         break;
 
     case EXEC_TASK:
-        if(config->verbose) printf("Setting core scheduling and executing program: %s\n", config->exec_params[0]);
+        if(config->verbose) printf("Setting core scheduling and executing program: %s\n", argv[config->execPosition]);
 
         prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid() , config->TaskType, &cookie);
         if(cookie == 0)
             prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, getpid(), config->TaskType, NULL);
 
-        execve(config->exec_params[0], config->exec_params, getenv());
+        execve(argv[config->execPosition], argv+(config->execPosition * sizeof(char *)) , environ);
         printf("Error: unable to start program!\n");
         exit(EXIT_FAILURE);
         break;

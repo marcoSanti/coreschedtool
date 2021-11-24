@@ -10,19 +10,19 @@ int main(int argc, char* argv[]){
     extern int errno;
     int i = 0, command = 0;
     unsigned long cookie;
-    extern char **environ;
 
-    checkRoot();
+    //checkRoot();
 
     if((config = loadConfiguration(argc, argv))==NULL){
         printHelp();
         exit(EXIT_FAILURE);
     }
 
-    //ckeck that no error returns from prctl() to ensure that CORE SCHEDULING returns no errors
-    if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, config->listOfTask[i], PIDTYPE_PID, &cookie) == -1)
-        handlePrctlError();
     
+
+    //ckeck that no error returns from prctl() to ensure that CORE SCHEDULING returns no errors
+    if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid(), PIDTYPE_PID, &cookie) == -1)
+        handlePrctlError();
 
     /*
         Since an api that allows to directly push a cookie to a certain task i not available,
@@ -55,15 +55,23 @@ int main(int argc, char* argv[]){
         printf("\n");
         break;
 
-    case EXEC_TASK:
-        if(config->verbose) printf("Setting core scheduling and executing program: %s\n", argv[config->execPosition]);
-
+    case EXEC_TASK: 
+        //if a cookie has already been set for another task, i will not set another cookie
+        //and i will be using the one already created so that the new task will run in core scheduling
+        //with the others
         prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid() , config->TaskType, &cookie);
+
         if(cookie == 0)
             prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, getpid(), config->TaskType, NULL);
 
-        execve(argv[config->execPosition], argv+(config->execPosition * sizeof(char *)) , environ);
-        printf("Error: unable to start program!\n");
+        if(config->verbose){
+            prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid() , config->TaskType, &cookie);
+            printf("Setting core scheduling and executing program: %s\n", argv[config->execPosition]);
+            printf("Task id \tCookie\n[%d] \t[%lu]\n\n", getpid(), cookie);
+        }  
+
+        execvp(argv[config->execPosition], argv+config->execPosition );
+        printf("Error: unable to start program!\nError is: %s\n", strerror(errno));
         exit(EXIT_FAILURE);
         break;
     
@@ -74,11 +82,13 @@ int main(int argc, char* argv[]){
         break;
     }
 
-    
+
+
     if(config->verbose){
         printConfiguration(config);
         printCookies(config);
     }
-   
+    
+    
     exit(EXIT_SUCCESS);
 }

@@ -91,6 +91,7 @@ cst_config * loadConfiguration(int argc, char* argv[]){
             config->cmd = EXEC_TASK;
             config->execPosition = parsedParams;
             return config; //stop the parsing of the code.
+           
         }
 
         

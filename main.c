@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
     int i = 0, command = 0;
     unsigned long cookie;
 
-    //checkRoot();
+    checkRoot();
 
     if((config = loadConfiguration(argc, argv))==NULL){
         printHelp();

@@ -22,7 +22,7 @@ $ make uninstall
 
 ## Usage
 ```
-$coreschedtool [\<list of taskId\> | \-add \<list of taskid\>  -to \<taskid\> | -c \<list of task id\>] [-v] 
+$coreschedtool [-v] [\<list of taskId\> | \-add \<list of taskid\>  -to \<taskid\> | -c \<list of task id\>] [<executable>] 
 ```
 Parameter description:
  - <list of task id\>: if no parameters are given, a new core scheduling group will be created with all task id listed separated by a space;
@@ -34,5 +34,31 @@ Parameter description:
  - -c \<list of task id\>: remove the \<list of task id\> from the core scheduling group wich is currently inserted into;
 
 - -v: a verbose output will be shown;
+- \<executable\> will run the executable command with core scheduling enabled
+
+
+### Examples
+
+```
+$coreschedtool -v 1234 5678
+```
+This command will set core scheduling for tasks id 1234 and 5678 and will print verbose option
+
+```
+$coreschedtool -v -add 1011 -to 1234 
+```
+This command will add the task with tid 1011 to the task group of which 1234 is a member
+
+
+```
+$corechedtool -peek 1234
+```
+This command will show the core scheduling cookie assiged to task id 1234. If 0 is shown, no core scheduling is set for given task
+
+```
+$coreschedtool -v ping github.com
+```
+This command will run the command "ping github.com" with core scheduling enabled!
+
 
 

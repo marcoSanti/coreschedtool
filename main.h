@@ -12,7 +12,7 @@ typedef enum {PID, TID} taskType_t;
 
 typedef enum {FALSE, TRUE} bool;
 
-typedef enum {CREATE_GROUP, ADD_TASK_TO_GROUP, CLEAR_TASK} command;
+typedef enum {CREATE_GROUP, ADD_TASK_TO_GROUP, CLEAR_TASK, PEEK_TASK, EXEC_TASK} command;
 
 //Required since the data structure is not present in sys/prctl.h
 //probably a bug. might be deleted in future revision
@@ -25,6 +25,7 @@ typedef struct{
     int numberOfTask;
     int *listOfTask;
     int shareFromTask;
+    int execPosition;
 } cst_config;
 
 

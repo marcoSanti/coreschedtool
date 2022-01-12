@@ -23,6 +23,10 @@ otherwise it is exposed in userspace since 5.16
 
 typedef enum {PIDTYPE_PID,PIDTYPE_TGID,PIDTYPE_PGID,PIDTYPE_SID,PIDTYPE_MAX}pid_type;
 
+# define PR_SCHED_CORE_SCOPE_THREAD		    0
+# define PR_SCHED_CORE_SCOPE_THREAD_GROUP	1
+# define PR_SCHED_CORE_SCOPE_PROCESS_GROUP	2
+
 #endif
 
 typedef struct{

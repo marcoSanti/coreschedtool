@@ -7,6 +7,7 @@
 #include <sys/prctl.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <linux/version.h>
 
 typedef enum {PID, TID} taskType_t;
 
@@ -14,9 +15,19 @@ typedef enum {FALSE, TRUE} bool;
 
 typedef enum {CREATE_GROUP, ADD_TASK_TO_GROUP, CLEAR_TASK, PEEK_TASK, EXEC_TASK} command;
 
-//Required since the data structure is not present in sys/prctl.h
-//probably a bug. might be deleted in future revision
+/*
+if kernel version is lower tan 5.16, we need to expose this typedef.
+otherwise it is exposed in userspace since 5.16
+*/
+#if LINUX_VERSION_CODE <= KERNEL_VERSION(5,16,0)
+
 typedef enum {PIDTYPE_PID,PIDTYPE_TGID,PIDTYPE_PGID,PIDTYPE_SID,PIDTYPE_MAX}pid_type;
+
+# define PR_SCHED_CORE_SCOPE_THREAD		    0
+# define PR_SCHED_CORE_SCOPE_THREAD_GROUP	1
+# define PR_SCHED_CORE_SCOPE_PROCESS_GROUP	2
+
+#endif
 
 typedef struct{
     pid_type TaskType; 

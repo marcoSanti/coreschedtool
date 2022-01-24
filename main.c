@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
     
 
     //ckeck that no error returns from prctl() to ensure that CORE SCHEDULING returns no errors
-    if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid(), PIDTYPE_PID, &cookie) == -1)
+    if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_SCOPE_THREAD, getpid(), PIDTYPE_PID, &cookie) == -1)
         handlePrctlError();
 
     /*
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]){
     switch (config->cmd)
     {
     case CREATE_GROUP:
-        prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, getpid(), config->TaskType, NULL);
+        prctl(PR_SCHED_CORE, PR_SCHED_CORE_SCOPE_THREAD_GROUP, getpid(), config->TaskType, NULL);
         pushCookie();
         break;
 
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]){
     case PEEK_TASK:
         printf("Task\tCookie\n");
         for(i=0;i<config->numberOfTask;i++){
-            prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, config->listOfTask[i] , config->TaskType, &cookie);
+            prctl(PR_SCHED_CORE, PR_SCHED_CORE_SCOPE_THREAD, config->listOfTask[i] , config->TaskType, &cookie);
             printf("[%d]\t[%lu]\n", config->listOfTask[i], cookie);
         }
         printf("\n");
@@ -59,13 +59,13 @@ int main(int argc, char* argv[]){
         //if a cookie has already been set for another task, i will not set another cookie
         //and i will be using the one already created so that the new task will run in core scheduling
         //with the others
-        prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid() , config->TaskType, &cookie);
+        prctl(PR_SCHED_CORE, PR_SCHED_CORE_SCOPE_THREAD, getpid() , config->TaskType, &cookie);
 
         if(cookie == 0)
-            prctl(PR_SCHED_CORE, PR_SCHED_CORE_CREATE, getpid(), config->TaskType, NULL);
+            prctl(PR_SCHED_CORE, PR_SCHED_CORE_SCOPE_THREAD_GROUP, getpid(), config->TaskType, NULL);
 
         if(config->verbose){
-            prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid() , config->TaskType, &cookie);
+            prctl(PR_SCHED_CORE, PR_SCHED_CORE_SCOPE_THREAD, getpid() , config->TaskType, &cookie);
             printf("Setting core scheduling and executing program: %s\n", argv[config->execPosition]);
             printf("Task id \tCookie\n[%d] \t[%lu]\n\n", getpid(), cookie);
         }  

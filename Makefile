@@ -1,6 +1,7 @@
 CC=gcc
 CFLAGS=-O3
 DEBUG=-g
+DESTDIR ?= /usr/local/bin
 
 coreschedtool: main.o utils.o
 	$(CC) -o coreschedtool main.o utils.o
@@ -16,10 +17,10 @@ clear:
 	rm coreschedtool
 
 install: coreschedtool
-	sudo cp coreschedtool /usr/bin/coreschedtool
+	cp coreschedtool $(DESTDIR)/coreschedtool
 	
-uninstall: /usr/bin/coreschedtool
-	sudo rm /usr/bin/coreschedtool
+uninstall: $(DESTDIR)/coreschedtool
+	rm $(DESTDIR)/coreschedtool
 
 debug: main.c utils.c main.h
 	$(CC) $(DEBUG) -o main.o -c main.c

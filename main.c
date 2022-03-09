@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
     
 
     //ckeck that no error returns from prctl() to ensure that CORE SCHEDULING returns no errors
-    if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_SCOPE_THREAD, getpid(), PIDTYPE_PID, &cookie) == -1)
+    if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid(), PIDTYPE_PID, &cookie) == -1)
         handlePrctlError();
 
     /*

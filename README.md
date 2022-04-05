@@ -9,7 +9,7 @@ this will compile the tool.
 $ make coreschedtool
 ```
 ### Install
-this will install the compiled software into the /usr/bin folder. it is also possible to install to a custom folder by adding the parameter DESDIR=<target_folder> to the command
+this will install the compiled software into the /usr/bin folder. it is also possible to install to a custom folder by adding the parameter DESTDIR=<target_folder> to the command or by using the localinstall target
 ```
 $ make install
 ```

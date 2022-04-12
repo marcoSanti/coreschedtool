@@ -18,13 +18,13 @@ clear:
 
 install: coreschedtool
 
-	sudo cp coreschedtool /usr/local/bin/coreschedtool
+	sudo cp coreschedtool $(DESTDIR)/coreschedtool
 	
-uninstall: /usr/local/bin/coreschedtool
-	sudo rm /usr/local/bin/coreschedtool
+uninstall: $(DESTDIR)/coreschedtool
+	sudo rm $(DESTDIR)/coreschedtool
 
 localinstall: coreschedtool
-	cp coreschedtool $SCRIPTDIR/bin/coreschedtool
+	cp coreschedtool $(SCRIPTDIR)/bin/coreschedtool
 
 
 debug: main.c utils.c main.h

@@ -14,6 +14,8 @@ cst_config * loadConfiguration(int argc, char* argv[]){
     if(config == NULL || argc == 1)
         return NULL;
     
+    /*Ensure that the operation will be only applied to the target pid and not to the pid group*/
+    config->TaskType = PR_SCHED_CORE_SCOPE_THREAD;
 
     while(parsedParams < argc){
     

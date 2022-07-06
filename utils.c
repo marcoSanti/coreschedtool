@@ -15,7 +15,7 @@ cst_config * loadConfiguration(int argc, char* argv[]){
         return NULL;
     
     /*Ensure that the operation will be only applied to the target pid and not to the pid group*/
-    config->TaskType = PR_SCHED_CORE_SCOPE_THREAD;
+    config->coreScope = PR_SCHED_CORE_SCOPE_THREAD;
 
     while(parsedParams < argc){
     
@@ -106,13 +106,13 @@ cst_config * loadConfiguration(int argc, char* argv[]){
 /*this function prints the program help*/
 void printHelp(){
     printf("\ncoreschedtool, a tool to manage core scheduling cookies.\n");
-    printf("developed by Marco Edoardo Santimaria as part of his thesis @ University of Torino (UniTo)\n");
+    printf("developed by Marco Edoardo Santimaria as part of his thesis @ University of Torino (UniTo)\n\n");
     printf("Usage: $coreschedtool [-v] [<list of taskId> | -add <list of taskid>  -to <taskid>| -c <list of task id> | -peek <list of taskid>] [<executable>]\n");
     printf("\n<list of task id> : \n\tif no parameters are given, a new core scheduling group will be created with all task id listed, separated by a space\n");
     printf("\n-r <fromTask> <toTask>: \n\tIf -r is given as parameter instead of <list of task id>, then a range of tasks will be used\n\n");
     printf("\n-add <list of task id> -to <taskid>: \n\t<list of task id> will be added to <taskid> core scheduling group\n");
     printf("\n-c <list of task id> : \n\tremove the <list of task id> from the core scheduling group wich is currently inserted into\n");
-    printf("\n-peek : \n\tprint all cookies from given tasks ids\n\n");
+    printf("\n-peek <list of taskid> : \n\tprint all cookies from given tasks ids\n\n");
     printf("\n<executable> : \n\trun the <executable> command with core scheduling enabled\n\n");
     printf("\n-v : \n\ta verbose output will be added\n\n");
     printf("\n\n");
@@ -130,9 +130,9 @@ bool isInt(char *str){
 /*this function prints the current tool configuration, as read from argv*/
 void printConfiguration(cst_config *conf){
     int i;
-    printf("\n\n|=========CONFIG========\n|\n| Command:\t%d\n| TaskType:\t%d\n| ShareFrom:\t%d\n| NumOfTasks:\t%d\n| Verbose:\t%d\n", 
+    printf("\n\n|=========CONFIG========\n|\n| Command:\t%d\n| Core scope:\t%d\n| ShareFrom:\t%d\n| NumOfTasks:\t%d\n| Verbose:\t%d\n", 
             conf->cmd,
-            conf->TaskType,
+            conf->coreScope,
             conf->shareFromTask,
             conf->numberOfTask,
             conf->verbose 
@@ -165,13 +165,13 @@ void printCookies(cst_config * config){
     printf("Task_ID\t\tCookie_value\n");
 
     for(i=0;i<config->numberOfTask;i++){
-        if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, config->listOfTask[i], PIDTYPE_PID, &cookie) == -1)
+        if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, config->listOfTask[i], config->coreScope, &cookie) == -1)
             handlePrctlError();
         else
             printf("  %d\t\t%lu\n", config->listOfTask[i], cookie);
     }
     printf("\n");
-    if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid(), PIDTYPE_PID, &cookie) == -1)
+    if(prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, getpid(), config->coreScope, &cookie) == -1)
         handlePrctlError();
     else
         printf("[ %d\t\t%lu ] <- coreschedtool temp cookieValue\n", getpid(), cookie);
@@ -223,7 +223,7 @@ void pushCookie(){
 
     /* pushing my cookie to te others tasks*/
     for(i = 0; i< config->numberOfTask; i++)
-        prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_TO, config->listOfTask[i], config->TaskType, NULL);
+        prctl(PR_SCHED_CORE, PR_SCHED_CORE_SHARE_TO, config->listOfTask[i], config->coreScope, NULL);
 }
 
 
